@@ -23,25 +23,11 @@ $ pip install -r requirements.txt
 $ APP_SECRET_TOKEN=SomeSecretToken python app.py
 ```
 
-# install cli
-git clone https://github.com/aws/aws-elastic-beanstalk-cli-setup.git
+===================================================
+# ANSWER
+===================================================
 
-# For Ubuntu and Debian
-apt-get install \
-    build-essential zlib1g-dev libssl-dev libncurses-dev \
-    libffi-dev libsqlite3-dev libreadline-dev libbz2-dev
+* the file `ec2-bootstrap.yaml` is a cloudformation template for launch a ec2 instance and setup python api
 
-./aws-elastic-beanstalk-cli-setup/scripts/bundled_installer
-
-eb platform select
-- pick python (option 10)
-
-eb init
-- command configure the eb-cli
-- 
-
-eb init 
-
-eb create oowlishlab --region us-east-1
-
-eb open
+* import the template on cloudformation
+* create a stack specifying the template `ec2-bootstrap.yaml` and upload it.

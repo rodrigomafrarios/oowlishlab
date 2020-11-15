@@ -1,0 +1,89 @@
+{
+  "Description": "Create an EC2 instance by AWS CloudFormation",
+  "Resources": 
+  {
+    "SecurityGroupOowlishlabTraffic": 
+    {
+      "Type": "AWS::EC2::SecurityGroup",
+      "Properties": {
+        "GroupName": "oowlishlab",
+        "SecurityGroupIngress": [
+          {
+            "IpProtocol": "tcp",
+            "FromPort": 22,
+            "ToPort": 22,
+            "CidrIp": "0.0.0.0/0",
+            "Description": "For traffic from Internet"
+          },
+          {
+            "IpProtocol": "tcp",
+            "FromPort": 8000,
+            "ToPort": 8000,
+            "CidrIp": "0.0.0.0/0",
+            "Description": "For traffic from Internet"
+          }
+        ],
+        "GroupDescription": "Security Group for oowlishlab server",
+        "VpcId": "vpc-3a7c7f40"
+      }
+    },
+    "Ec2InstanceOowlishlab": 
+    {
+      "Type": "AWS::EC2::Instance",
+      "Properties": 
+      {
+        "AvailabilityZone": "us-east-1a",
+        "BlockDeviceMappings": [
+          {
+            "DeviceName": "/dev/sda1",
+            "Ebs": {
+              "DeleteOnTermination": "true",
+              "VolumeSize": "8",
+              "VolumeType": "gp2"
+            }
+          }
+        ],
+        "ImageId": "ami-0885b1f6bd170450c",
+        "InstanceType": "t2.micro",
+        "KeyName": "oowlishlab2",
+        "NetworkInterfaces": [
+          {
+            "Description": "Primary network interface",
+            "DeviceIndex": "0",
+            "SubnetId": "subnet-c41eee9b",
+            "PrivateIpAddress": "172.31.32.4",
+            "GroupSet": [
+              {
+                "Ref": "SecurityGroupOowlishlabTraffic"
+              }
+            ]
+          }
+        ],
+        "UserData" : 
+        {
+          "Fn::Base64" : 
+          { 
+            "Fn::Join" : 
+            ["",
+              [
+                "#!/bin/bash -ex","\n",
+                "\n","sudo apt-get update -y","\n",
+                "sudo apt-get install python3 -y","\n",
+                "sudo apt install python3-pip -y", "\n",  
+                "sudo apt-get install python3-venv -y", "\n",
+                "cd /home/ubuntu", "\n",             
+                "su ubuntu -c 'git clone https://github.com/rodrigomafrarios/oowlishlab.git'", "\n",
+                "cd /home/ubuntu/oowlishlab", "\n",
+                "su ubuntu -c 'python3 -m venv venv'", "\n",
+                "su ubuntu -c 'source venv/bin/activate'", "\n",
+                "su ubuntu -c 'pip3 install -r requirements.txt'", "\n",
+                "su ubuntu -c 'pip3 install boto3'", "\n",
+                "su ubuntu -c 'python3 app.py'"
+              ]
+            ]
+          }
+        }
+      }
+    }
+  }
+}
