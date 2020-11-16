@@ -27,7 +27,8 @@ $ APP_SECRET_TOKEN=SomeSecretToken python app.py
 # ANSWER
 ===================================================
 
+* create a secret on AWS Secret Manager
+* set aws credentials on the code app.py
 * the file `ec2-bootstrap.yaml` is a cloudformation template for launch a ec2 instance and setup python api
-
 * import the template on cloudformation
 * create a stack specifying the template `ec2-bootstrap.yaml` and upload it.
